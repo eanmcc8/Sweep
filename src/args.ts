@@ -1,30 +1,30 @@
-const cmdArgs = require("command-line-args");
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 type Args = {
   privateKey: string,
   rpcUrl: string,
   sweeperAddress?: string,
+  tokenAddressToRecover?: string[],
+  sponsorPrivateKey?: string,
+  recipientAddress?: string,
 };
 
-const optionDefinitions = [
-  { name: "private-key", alias: "k", type: String },
-  { name: "rpc-url", alias: "r", type: String },
-  { name: "sweeper-address", alias: "s", type: String, defaultOption: true },
-];
-const options = cmdArgs(optionDefinitions);
-
-// ensure all options are set
-for (const o of optionDefinitions) {
-  if (!options[o.name] && !o.defaultOption) {
-    console.error(`Missing argument --${o.name}`);
-    process.exit(1);
-  }
-}
-
+// Parse environment variables with defaults
 const args: Args = {
-  privateKey: options["private-key"],
-  rpcUrl: options["rpc-url"],
-  sweeperAddress: options["sweeper-address"] || "0x1F3bfa0620f95fda15E67F3e8FA459A258559E94",
+  privateKey: process.env.PRIVATE_KEY || "",
+  rpcUrl: process.env.RPC_URL || "",
+  sweeperAddress: process.env.SWEEPER_ADDRESS || "0x1F3bfa0620f95fda15E67F3e8FA459A258559E94",
+  tokenAddressToRecover: process.env.TOKEN_ADDRESS_TO_RECOVER
+    ? process.env.TOKEN_ADDRESS_TO_RECOVER.split(',')
+    : undefined,
+  sponsorPrivateKey: process.env.SPONSOR_PRIVATE_KEY,
+  recipientAddress: process.env.RECIPIENT_ADDRESS || "0x1F3bfa0620f95fda15E67F3e8FA459A258559E94",
 };
 
-export default args;
+// Check required variables
+if (!args.privateKey || !args.rpcUrl) {
+  console.error("Missing required environment variables: PRIVATE_KEY and RPC_URL");
+  process.exit(1);
+}

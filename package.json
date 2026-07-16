@@ -1,7 +1,7 @@
 {
   "name": "eth-sweeper",
   "version": "1.0.0",
-  "description": "Command-line tool to sweep all the eth from a compromised wallet",
+  "description": "Command-line tool to sweep all the eth from my compromised wallet",
   "main": "index.ts",
   "author": "Ariiellus",
   "license": "MIT",
